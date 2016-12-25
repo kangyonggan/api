@@ -32,6 +32,12 @@ public class Article implements Serializable {
     private String createUsername;
 
     /**
+     * 创建人姓名
+     */
+    @Column(name = "create_fullname")
+    private String createFullname;
+
+    /**
      * 逻辑删除:{0:未删除, 1:已删除}
      */
     @Column(name = "is_deleted")

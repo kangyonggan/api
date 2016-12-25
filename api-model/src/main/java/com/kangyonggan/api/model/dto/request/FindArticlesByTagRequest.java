@@ -1,7 +1,6 @@
 package com.kangyonggan.api.model.dto.request;
 
 import com.kangyonggan.api.common.annotation.Valid;
-import com.kangyonggan.api.model.BaseObject;
 import lombok.Data;
 
 /**
@@ -9,12 +8,12 @@ import lombok.Data;
  * @since 2016/12/25
  */
 @Data
-public class FindDictionaryByIdRequest extends BaseObject {
+public class FindArticlesByTagRequest extends PageRequest {
 
     /**
-     * 主键, 自增
+     * 标签
      */
-    @Valid(min = 1, max = Long.MAX_VALUE)
-    private Long id;
+    @Valid(required = false, minLength = 1, maxLength = 32)
+    private String tag;
 
 }

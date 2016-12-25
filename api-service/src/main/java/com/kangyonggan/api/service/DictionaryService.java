@@ -16,7 +16,7 @@ public interface DictionaryService {
      * @param request
      * @return
      */
-    CommonResponse<Dictionary> SearchDictionsries(SearchDictionariesRequest request);
+    CommonResponse<Dictionary> searchDictionsries(SearchDictionariesRequest request);
 
     /**
      * 根据主键查找字典，可以查到未删除的，一般是给管理员用
@@ -24,7 +24,7 @@ public interface DictionaryService {
      * @param request
      * @return
      */
-    CommonResponse<Dictionary> findDictionaryById(FindDictionaryByIdRequest request);
+    CommonResponse<Dictionary> getDictionary(GetDictionaryRequest request);
 
     /**
      * 根据类型查找字典，只能查到未删除的

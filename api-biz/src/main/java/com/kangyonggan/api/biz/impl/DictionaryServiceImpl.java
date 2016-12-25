@@ -33,7 +33,7 @@ public class DictionaryServiceImpl extends BaseService<Dictionary> implements Di
     private DictionaryMapper dictionaryMapper;
 
     @Override
-    public CommonResponse<Dictionary> SearchDictionsries(SearchDictionariesRequest request) {
+    public CommonResponse<Dictionary> searchDictionsries(SearchDictionariesRequest request) {
         CommonResponse<Dictionary> response = CommonResponse.getSuccessResponse();
 
         Example example = new Example(Dictionary.class);
@@ -67,7 +67,7 @@ public class DictionaryServiceImpl extends BaseService<Dictionary> implements Di
 
     @Override
     @CacheGetOrSave("dictionary:id:{0:id}")
-    public CommonResponse<Dictionary> findDictionaryById(FindDictionaryByIdRequest request) {
+    public CommonResponse<Dictionary> getDictionary(GetDictionaryRequest request) {
         CommonResponse<Dictionary> response = CommonResponse.getSuccessResponse();
 
         Dictionary dictionary = super.selectByPrimaryKey(request.getId());
@@ -157,6 +157,7 @@ public class DictionaryServiceImpl extends BaseService<Dictionary> implements Di
             response.toUnknowExceptionResponse();
             return response;
         }
+        log.info("copy request to dictionary, dictionary is:{}", dictionary);
 
         Example example = new Example(Dictionary.class);
         example.createCriteria().andEqualTo("code", request.getCode());
