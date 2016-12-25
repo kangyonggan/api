@@ -3,10 +3,12 @@ package com.kangyonggan.api.biz.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kangyonggan.api.biz.service.AttachmentService;
+import com.kangyonggan.api.biz.service.DictionaryService;
 import com.kangyonggan.api.biz.service.impl.BaseService;
 import com.kangyonggan.api.common.annotation.CacheDelete;
 import com.kangyonggan.api.common.annotation.CacheDeleteAll;
 import com.kangyonggan.api.common.annotation.CacheGetOrSave;
+import com.kangyonggan.api.common.util.Collections3;
 import com.kangyonggan.api.common.util.StringUtil;
 import com.kangyonggan.api.mapper.ArticleMapper;
 import com.kangyonggan.api.model.constants.AppConstants;
@@ -15,6 +17,7 @@ import com.kangyonggan.api.model.dto.reponse.CommonResponse;
 import com.kangyonggan.api.model.dto.request.*;
 import com.kangyonggan.api.model.vo.Article;
 import com.kangyonggan.api.model.vo.Attachment;
+import com.kangyonggan.api.model.vo.Dictionary;
 import com.kangyonggan.api.service.ArticleService;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -38,6 +41,9 @@ public class ArticleServiceImpl extends BaseService<Article> implements ArticleS
 
     @Autowired
     private AttachmentService attachmentService;
+
+    @Autowired
+    private DictionaryService dictionaryService;
 
     @Override
     public CommonResponse<Article> searchArticles(SearchArticlesRequest request) {
@@ -110,6 +116,9 @@ public class ArticleServiceImpl extends BaseService<Article> implements ArticleS
     public CommonResponse<Article> saveArticleWithAttachments(SaveArticleRequest request) {
         CommonResponse<Article> response = CommonResponse.getSuccessResponse();
 
+        List<Dictionary> dictionaries = dictionaryService.findDictionariesByCodes(request.getTags());
+        request.setTags(Collections3.convertToString(Collections3.extractToList(dictionaries, "value"), " "));
+
         Article article = new Article();
         try {
             PropertyUtils.copyProperties(article, request);
@@ -128,6 +137,8 @@ public class ArticleServiceImpl extends BaseService<Article> implements ArticleS
         }
         response.setData(article);
 
+        dictionaryService.saveArticleDictionaries(article.getId(), dictionaries);
+
         // 保存附件
         if (request.getAttachments() != null && !request.getAttachments().isEmpty()) {
             attachmentService.saveAttachments(article.getId(), request.getAttachments());
@@ -139,8 +150,14 @@ public class ArticleServiceImpl extends BaseService<Article> implements ArticleS
     @Override
     @CacheDelete("article:id:{0:id}")
     @CacheDeleteAll("article:tag")
-    public CommonResponse<Article> updateArticle(UpdateArticleRequest request) {
+    public CommonResponse<Article> updateArticleWithAttachments(UpdateArticleRequest request) {
         CommonResponse<Article> response = CommonResponse.getSuccessResponse();
+
+        List<Dictionary> dictionaries = null;
+        if (StringUtils.isNotEmpty(request.getTags())) {
+            dictionaries = dictionaryService.findDictionariesByCodes(request.getTags());
+            request.setTags(Collections3.convertToString(Collections3.extractToList(dictionaries, "value"), " "));
+        }
 
         Article article = new Article();
         try {
@@ -163,6 +180,20 @@ public class ArticleServiceImpl extends BaseService<Article> implements ArticleS
             response.toFailureResponse();
         }
         response.setData(article);
+
+        if (dictionaries != null && !dictionaries.isEmpty()) {
+
+            // 删除原本的标签
+            dictionaryService.deleteArticleDictionaries(article.getId());
+
+            dictionaryService.saveArticleDictionaries(article.getId(), dictionaries);
+        }
+
+        // 保存附件
+        if (request.getAttachments() != null && !request.getAttachments().isEmpty()) {
+            attachmentService.saveAttachments(article.getId(), request.getAttachments());
+        }
+
 
         return response;
     }

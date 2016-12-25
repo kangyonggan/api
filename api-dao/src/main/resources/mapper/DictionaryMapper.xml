@@ -15,4 +15,20 @@
         <result column="created_time" property="createdTime" jdbcType="TIMESTAMP"/>
         <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP"/>
     </resultMap>
+
+    <insert id="insertArticleDictionaries">
+        INSERT INTO article_dictionary
+        (article_id, dictionary_code)
+        VALUES
+        <foreach collection="codes" item="code" separator=",">
+            (#{articleId}, #{code})
+        </foreach>
+    </insert>
+
+    <delete id="deleteArticleDictionaries">
+        DELETE FROM article_dictionary
+        <where>
+            article_id = #{id}
+        </where>
+    </delete>
 </mapper>

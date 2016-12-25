@@ -49,7 +49,7 @@ public interface ArticleService {
      * @param request
      * @return
      */
-    CommonResponse<Article> updateArticle(UpdateArticleRequest request);
+    CommonResponse<Article> updateArticleWithAttachments(UpdateArticleRequest request);
 
     /**
      * 根据标签查找文章
