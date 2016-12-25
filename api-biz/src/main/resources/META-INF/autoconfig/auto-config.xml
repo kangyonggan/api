@@ -4,7 +4,7 @@
         <!-- dubbo -->
         <property name="api.dubbo.name" description="提供者名字" defaultValue="API_PROVODER"/>
         <property name="api.dubbo.registry.address" description="dubbo注册地址"
-                  defaultValue="zookeeper://127.0.0.1:2181?backup=127.0.0.1:8082,127.0.0.1:8083"/>
+                  defaultValue="zookeeper://127.0.0.1:2181?backup=127.0.0.1:2182,127.0.0.1:2183"/>
         <property name="api.dubbo.protocol.port" description="dubbo注册端口" defaultValue="-1"/>
         <property name="api.dubbo.timeout" description="dubbo超时时间" defaultValue="10000"/>
         <property name="api.dubbo.api.version" description="api提供接口的版本" defaultValue="1.0.0"/>
@@ -35,6 +35,7 @@
     <script>
         <generate template="app.properties"/>
         <generate template="applicationContext-datasource.xml"/>
+        <generate template="applicationContext-provider.xml"/>
         <generate template="applicationContext-redis.xml"/>
         <generate template="log4j2.xml"/>
     </script>
