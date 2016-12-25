@@ -169,6 +169,7 @@ public class DictionaryServiceImpl extends BaseService<Dictionary> implements Di
             log.error("根据代码更新字典失败");
             response.toFailureResponse();
         }
+        dictionary = super.selectOne(dictionary);
         response.setData(dictionary);
 
         return response;
