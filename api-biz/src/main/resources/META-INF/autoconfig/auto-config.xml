@@ -2,7 +2,7 @@
 <config>
     <group>
         <!-- dubbo -->
-        <property name="api.dubbo.name" description="提供者名字" defaultValue="API_PROVODER"/>
+        <property name="api.dubbo.name" description="项目名字" defaultValue="api"/>
         <property name="api.dubbo.registry.address" description="dubbo注册地址"
                   defaultValue="zookeeper://127.0.0.1:2181?backup=127.0.0.1:2182,127.0.0.1:2183"/>
         <property name="api.dubbo.protocol.port" description="dubbo注册端口" defaultValue="-1"/>
