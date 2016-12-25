@@ -1,5 +1,6 @@
 package com.kangyonggan.api.service;
 
+import com.kangyonggan.api.model.dto.reponse.AttachmentResponse;
 import com.kangyonggan.api.model.dto.reponse.CommonResponse;
 import com.kangyonggan.api.model.dto.request.*;
 import com.kangyonggan.api.model.vo.Article;
@@ -24,7 +25,7 @@ public interface ArticleService {
      * @param request
      * @return
      */
-    CommonResponse<Article> getArticle(GetArticleRequest request);
+    AttachmentResponse<Article> getArticle(GetArticleRequest request);
 
     /**
      * 根据主键查找文章(只能查到未删除的)
@@ -32,7 +33,7 @@ public interface ArticleService {
      * @param request
      * @return
      */
-    CommonResponse<Article> findArticleById(FindArticleByIdRequest request);
+    AttachmentResponse<Article> findArticleById(FindArticleByIdRequest request);
 
     /**
      * 保存文章
@@ -40,7 +41,7 @@ public interface ArticleService {
      * @param request
      * @return
      */
-    CommonResponse<Article> saveArticle(SaveArticleRequest request);
+    CommonResponse<Article> saveArticleWithAttachments(SaveArticleRequest request);
 
     /**
      * 更新文章

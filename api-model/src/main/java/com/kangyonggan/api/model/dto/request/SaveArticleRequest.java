@@ -2,7 +2,10 @@ package com.kangyonggan.api.model.dto.request;
 
 import com.kangyonggan.api.common.annotation.Valid;
 import com.kangyonggan.api.model.BaseObject;
+import com.kangyonggan.api.model.vo.Attachment;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * @author kangyonggan
@@ -40,5 +43,7 @@ public class SaveArticleRequest extends BaseObject {
      */
     @Valid(minLength = 1)
     private String content;
+
+    private List<Attachment> attachments;
 
 }

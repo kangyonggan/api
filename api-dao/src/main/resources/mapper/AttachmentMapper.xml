@@ -15,4 +15,14 @@
         <result column="created_time" property="createdTime" jdbcType="TIMESTAMP"/>
         <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP"/>
     </resultMap>
+
+    <insert id="insertAttachments">
+        INSERT INTO attachment
+        (article_id, name, path, create_username)
+        VALUES
+        <foreach collection="attachments" item="attachment" separator=",">
+            (#{articleId}, #{attachment.name}, #{attachment.path}, #{attachment.createUsername})
+        </foreach>
+    </insert>
+
 </mapper>

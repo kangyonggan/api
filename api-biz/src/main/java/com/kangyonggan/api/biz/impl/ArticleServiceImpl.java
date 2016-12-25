@@ -2,6 +2,7 @@ package com.kangyonggan.api.biz.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.kangyonggan.api.biz.service.AttachmentService;
 import com.kangyonggan.api.biz.service.impl.BaseService;
 import com.kangyonggan.api.common.annotation.CacheDelete;
 import com.kangyonggan.api.common.annotation.CacheDeleteAll;
@@ -9,9 +10,11 @@ import com.kangyonggan.api.common.annotation.CacheGetOrSave;
 import com.kangyonggan.api.common.util.StringUtil;
 import com.kangyonggan.api.mapper.ArticleMapper;
 import com.kangyonggan.api.model.constants.AppConstants;
+import com.kangyonggan.api.model.dto.reponse.AttachmentResponse;
 import com.kangyonggan.api.model.dto.reponse.CommonResponse;
 import com.kangyonggan.api.model.dto.request.*;
 import com.kangyonggan.api.model.vo.Article;
+import com.kangyonggan.api.model.vo.Attachment;
 import com.kangyonggan.api.service.ArticleService;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -32,6 +35,9 @@ public class ArticleServiceImpl extends BaseService<Article> implements ArticleS
 
     @Autowired
     private ArticleMapper articleMapper;
+
+    @Autowired
+    private AttachmentService attachmentService;
 
     @Override
     public CommonResponse<Article> searchArticles(SearchArticlesRequest request) {
@@ -61,14 +67,17 @@ public class ArticleServiceImpl extends BaseService<Article> implements ArticleS
 
     @Override
     @CacheGetOrSave("article:id:{0:id}")
-    public CommonResponse<Article> getArticle(GetArticleRequest request) {
-        CommonResponse<Article> response = CommonResponse.getSuccessResponse();
+    public AttachmentResponse<Article> getArticle(GetArticleRequest request) {
+        AttachmentResponse<Article> response = AttachmentResponse.getSuccessResponse();
 
         Article article = super.selectByPrimaryKey(request.getId());
         response.setData(article);
 
         if (article == null) {
             response.toNoResultResponse();
+        } else {
+            List<Attachment> attachments = attachmentService.findAttachmentsBySourceId(article.getId());
+            response.setAttachments(attachments);
         }
 
         return response;
@@ -76,8 +85,8 @@ public class ArticleServiceImpl extends BaseService<Article> implements ArticleS
 
     @Override
     @CacheGetOrSave("article:id:{0:id}")
-    public CommonResponse<Article> findArticleById(FindArticleByIdRequest request) {
-        CommonResponse<Article> response = CommonResponse.getSuccessResponse();
+    public AttachmentResponse<Article> findArticleById(FindArticleByIdRequest request) {
+        AttachmentResponse<Article> response = AttachmentResponse.getSuccessResponse();
 
         Article article = new Article();
         article.setId(request.getId());
@@ -88,6 +97,9 @@ public class ArticleServiceImpl extends BaseService<Article> implements ArticleS
 
         if (article == null) {
             response.toNoResultResponse();
+        } else {
+            List<Attachment> attachments = attachmentService.findAttachmentsBySourceId(article.getId());
+            response.setAttachments(attachments);
         }
 
         return response;
@@ -95,7 +107,7 @@ public class ArticleServiceImpl extends BaseService<Article> implements ArticleS
 
     @Override
     @CacheDeleteAll("article:tag")
-    public CommonResponse<Article> saveArticle(SaveArticleRequest request) {
+    public CommonResponse<Article> saveArticleWithAttachments(SaveArticleRequest request) {
         CommonResponse<Article> response = CommonResponse.getSuccessResponse();
 
         Article article = new Article();
@@ -115,6 +127,11 @@ public class ArticleServiceImpl extends BaseService<Article> implements ArticleS
             response.toFailureResponse();
         }
         response.setData(article);
+
+        // 保存附件
+        if (request.getAttachments() != null && !request.getAttachments().isEmpty()) {
+            attachmentService.saveAttachments(article.getId(), request.getAttachments());
+        }
 
         return response;
     }
