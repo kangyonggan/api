@@ -20,19 +20,19 @@ public class UpdateDictionaryByCodeRequest extends BaseObject {
     /**
      * 值
      */
-    @Valid(minLength = 1, maxLength = 128)
+    @Valid(required = false, minLength = 1, maxLength = 128)
     private String value;
 
     /**
      * 类型
      */
-    @Valid(minLength = 1, maxLength = 16)
+    @Valid(required = false, minLength = 1, maxLength = 16)
     private String type;
 
     /**
      * 父代码
      */
-    @Valid(minLength = 1, maxLength = 32)
+    @Valid(required = false, minLength = 1, maxLength = 32)
     private String pcode;
 
     /**
