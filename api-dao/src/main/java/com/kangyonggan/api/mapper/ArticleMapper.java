@@ -1,6 +1,7 @@
 package com.kangyonggan.api.mapper;
 
 import com.kangyonggan.api.model.vo.Article;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,5 +15,5 @@ public interface ArticleMapper extends MyMapper<Article> {
      * @param tag
      * @return
      */
-    List<Article> selectArticlesByTag(String tag);
+    List<Article> selectArticlesByTag(@Param("tag") String tag);
 }
