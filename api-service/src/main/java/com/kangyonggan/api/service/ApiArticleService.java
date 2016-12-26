@@ -2,10 +2,7 @@ package com.kangyonggan.api.service;
 
 import com.kangyonggan.api.model.dto.reponse.AttachmentResponse;
 import com.kangyonggan.api.model.dto.reponse.CommonResponse;
-import com.kangyonggan.api.model.dto.request.FindArticlesByTagRequest;
-import com.kangyonggan.api.model.dto.request.SaveArticleRequest;
-import com.kangyonggan.api.model.dto.request.SearchArticlesRequest;
-import com.kangyonggan.api.model.dto.request.UpdateArticleRequest;
+import com.kangyonggan.api.model.dto.request.*;
 import com.kangyonggan.api.model.vo.Article;
 
 /**
@@ -39,7 +36,7 @@ public interface ApiArticleService {
     AttachmentResponse<Article> findArticleById(Long id);
 
     /**
-     * 保存文章
+     * 保存文章（带附件）
      *
      * @param request
      * @return
@@ -47,12 +44,20 @@ public interface ApiArticleService {
     CommonResponse<Article> saveArticleWithAttachments(SaveArticleRequest request);
 
     /**
+     * 更新文章(带附件)
+     *
+     * @param request
+     * @return
+     */
+    CommonResponse<Article> updateArticleWithAttachments(UpdateArticleWithAttachmentsRequest request);
+
+    /**
      * 更新文章
      *
      * @param request
      * @return
      */
-    CommonResponse<Article> updateArticleWithAttachments(UpdateArticleRequest request);
+    CommonResponse<Article> updateArticle(UpdateArticleRequest request);
 
     /**
      * 根据标签查找文章

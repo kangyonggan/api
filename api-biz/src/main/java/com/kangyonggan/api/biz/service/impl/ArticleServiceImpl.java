@@ -9,6 +9,7 @@ import com.kangyonggan.api.mapper.ArticleMapper;
 import com.kangyonggan.api.model.dto.reponse.CommonResponse;
 import com.kangyonggan.api.model.dto.request.SaveArticleRequest;
 import com.kangyonggan.api.model.dto.request.UpdateArticleRequest;
+import com.kangyonggan.api.model.dto.request.UpdateArticleWithAttachmentsRequest;
 import com.kangyonggan.api.model.vo.Article;
 import com.kangyonggan.api.model.vo.Dictionary;
 import lombok.extern.log4j.Log4j2;
@@ -47,7 +48,7 @@ public class ArticleServiceImpl extends BaseService<Article> implements ArticleS
         try {
             PropertyUtils.copyProperties(article, request);
         } catch (Exception e) {
-            log.error("保存文章时， 属性拷贝异常");
+            log.error("保存文章时， 属性拷贝异常", e);
             response.toUnknowExceptionResponse();
             return;
         }
@@ -70,7 +71,8 @@ public class ArticleServiceImpl extends BaseService<Article> implements ArticleS
     }
 
     @Override
-    public void updateArticleWithAttachments(UpdateArticleRequest request, CommonResponse<Article> response) {
+    @LogTime
+    public void updateArticleWithAttachments(UpdateArticleWithAttachmentsRequest request, CommonResponse<Article> response) {
 
         List<Dictionary> dictionaries = null;
         if (StringUtils.isNotEmpty(request.getTags())) {
@@ -82,7 +84,7 @@ public class ArticleServiceImpl extends BaseService<Article> implements ArticleS
         try {
             PropertyUtils.copyProperties(article, request);
         } catch (Exception e) {
-            log.error("根据主键更新文章时， 属性拷贝异常");
+            log.error("根据主键更新文章时， 属性拷贝异常", e);
             response.toUnknowExceptionResponse();
             return;
         }
@@ -112,6 +114,47 @@ public class ArticleServiceImpl extends BaseService<Article> implements ArticleS
         // 保存附件
         if (request.getAttachments() != null && !request.getAttachments().isEmpty()) {
             attachmentService.saveAttachments(article.getId(), request.getAttachments());
+        }
+    }
+
+    @Override
+    @LogTime
+    public void updateArticle(UpdateArticleRequest request, CommonResponse<Article> response) {
+        List<Dictionary> dictionaries = null;
+        if (StringUtils.isNotEmpty(request.getTags())) {
+            dictionaries = dictionaryService.findDictionariesByCodes(request.getTags());
+            request.setTags(Collections3.convertToString(Collections3.extractToList(dictionaries, "value"), " "));
+        }
+
+        Article article = new Article();
+        try {
+            PropertyUtils.copyProperties(article, request);
+        } catch (Exception e) {
+            log.error("根据主键更新文章时， 属性拷贝异常", e);
+            response.toUnknowExceptionResponse();
+            return;
+        }
+        log.info("copy request to article, article is:{}", article);
+
+        Example example = new Example(Article.class);
+        example.createCriteria().andEqualTo("id", request.getId());
+
+        int row = articleMapper.updateByExampleSelective(article, example);
+        log.info("根据主键更新文章影响行数:row={}", row);
+
+        if (row == 0) {
+            log.error("根据主键更新文章失败");
+            response.toFailureResponse();
+        }
+        article = super.selectByPrimaryKey(article.getId());
+        response.setData(article);
+
+        if (dictionaries != null && !dictionaries.isEmpty()) {
+
+            // 删除原本的标签
+            dictionaryService.deleteArticleDictionaries(article.getId());
+
+            dictionaryService.saveArticleDictionaries(article.getId(), dictionaries);
         }
     }
 }

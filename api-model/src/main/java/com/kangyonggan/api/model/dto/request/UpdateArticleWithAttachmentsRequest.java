@@ -2,14 +2,17 @@ package com.kangyonggan.api.model.dto.request;
 
 import com.kangyonggan.api.common.annotation.Valid;
 import com.kangyonggan.api.model.BaseObject;
+import com.kangyonggan.api.model.vo.Attachment;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * @author kangyonggan
  * @since 2016/12/25
  */
 @Data
-public class UpdateArticleRequest extends BaseObject {
+public class UpdateArticleWithAttachmentsRequest extends BaseObject {
 
     /**
      * 主键, 自增
@@ -42,15 +45,11 @@ public class UpdateArticleRequest extends BaseObject {
     private String createFullname;
 
     /**
-     * 逻辑删除:{0:未删除, 1:已删除}
-     */
-    @Valid(required = false, pattern = "^[01]$", message = "是否删除的值只能是0或1")
-    private Byte isDeleted;
-
-    /**
      * 文章内容
      */
     @Valid(required = false, minLength = 1)
     private String content;
+
+    private List<Attachment> attachments;
 
 }

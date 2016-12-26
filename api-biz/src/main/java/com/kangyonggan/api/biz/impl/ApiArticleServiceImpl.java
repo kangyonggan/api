@@ -9,22 +9,16 @@ import com.kangyonggan.api.biz.service.impl.BaseService;
 import com.kangyonggan.api.common.annotation.CacheDelete;
 import com.kangyonggan.api.common.annotation.CacheDeleteAll;
 import com.kangyonggan.api.common.annotation.CacheGetOrSave;
-import com.kangyonggan.api.common.util.Collections3;
 import com.kangyonggan.api.common.util.StringUtil;
 import com.kangyonggan.api.mapper.ArticleMapper;
 import com.kangyonggan.api.model.constants.AppConstants;
 import com.kangyonggan.api.model.dto.reponse.AttachmentResponse;
 import com.kangyonggan.api.model.dto.reponse.CommonResponse;
-import com.kangyonggan.api.model.dto.request.FindArticlesByTagRequest;
-import com.kangyonggan.api.model.dto.request.SaveArticleRequest;
-import com.kangyonggan.api.model.dto.request.SearchArticlesRequest;
-import com.kangyonggan.api.model.dto.request.UpdateArticleRequest;
+import com.kangyonggan.api.model.dto.request.*;
 import com.kangyonggan.api.model.vo.Article;
 import com.kangyonggan.api.model.vo.Attachment;
-import com.kangyonggan.api.model.vo.Dictionary;
 import com.kangyonggan.api.service.ApiArticleService;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -128,10 +122,21 @@ public class ApiArticleServiceImpl extends BaseService<Article> implements ApiAr
     @Override
     @CacheDelete("article:id:{0:id}||dictionary:article:{0:id}")
     @CacheDeleteAll("article:tag")
-    public CommonResponse<Article> updateArticleWithAttachments(UpdateArticleRequest request) {
+    public CommonResponse<Article> updateArticleWithAttachments(UpdateArticleWithAttachmentsRequest request) {
         CommonResponse<Article> response = CommonResponse.getSuccessResponse();
 
         articleService.updateArticleWithAttachments(request, response);
+
+        return response;
+    }
+
+    @Override
+    @CacheDelete("article:id:{0:id}||dictionary:article:{0:id}")
+    @CacheDeleteAll("article:tag")
+    public CommonResponse<Article> updateArticle(UpdateArticleRequest request) {
+        CommonResponse<Article> response = CommonResponse.getSuccessResponse();
+
+        articleService.updateArticle(request, response);
 
         return response;
     }
