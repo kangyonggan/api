@@ -12,6 +12,7 @@ import com.kangyonggan.api.common.annotation.CacheGetOrSave;
 import com.kangyonggan.api.common.util.StringUtil;
 import com.kangyonggan.api.mapper.ArticleMapper;
 import com.kangyonggan.api.model.constants.AppConstants;
+import com.kangyonggan.api.model.constants.AttachmentType;
 import com.kangyonggan.api.model.dto.reponse.AttachmentResponse;
 import com.kangyonggan.api.model.dto.reponse.CommonResponse;
 import com.kangyonggan.api.model.dto.request.*;
@@ -80,7 +81,7 @@ public class ApiArticleServiceImpl extends BaseService<Article> implements ApiAr
         if (article == null) {
             response.toNoResultResponse();
         } else {
-            List<Attachment> attachments = attachmentService.findAttachmentsBySourceId(article.getId());
+            List<Attachment> attachments = attachmentService.findAttachmentsBySourceIdAndType(article.getId(), AttachmentType.ARTICLE.getType());
             response.setAttachments(attachments);
         }
 
@@ -102,7 +103,7 @@ public class ApiArticleServiceImpl extends BaseService<Article> implements ApiAr
         if (article == null) {
             response.toNoResultResponse();
         } else {
-            List<Attachment> attachments = attachmentService.findAttachmentsBySourceId(article.getId());
+            List<Attachment> attachments = attachmentService.findAttachmentsBySourceIdAndType(article.getId(), AttachmentType.ARTICLE.getType());
             response.setAttachments(attachments);
         }
 

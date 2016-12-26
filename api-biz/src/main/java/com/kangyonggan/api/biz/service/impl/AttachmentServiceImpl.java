@@ -25,10 +25,11 @@ public class AttachmentServiceImpl extends BaseService<Attachment> implements At
     }
 
     @Override
-    public List<Attachment> findAttachmentsBySourceId(Long sourceId) {
+    public List<Attachment> findAttachmentsBySourceIdAndType(Long sourceId, String type) {
         Attachment attachment = new Attachment();
         attachment.setIsDeleted(AppConstants.IS_DELETED_NO);
         attachment.setSourceId(sourceId);
+        attachment.setType(type);
 
         return super.select(attachment);
     }

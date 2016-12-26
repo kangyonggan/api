@@ -24,7 +24,8 @@ public interface AttachmentService {
      * 查找附件
      *
      * @param sourceId
+     * @param type
      * @return
      */
-    List<Attachment> findAttachmentsBySourceId(Long sourceId);
+    List<Attachment> findAttachmentsBySourceIdAndType(Long sourceId, String type);
 }
