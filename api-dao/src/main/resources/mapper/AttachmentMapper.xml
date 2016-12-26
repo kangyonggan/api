@@ -21,7 +21,7 @@
         (source_id, type, name, path, create_username)
         VALUES
         <foreach collection="attachments" item="attachment" separator=",">
-            (#{sourceId}, ,#{attachment.type} #{attachment.name}, #{attachment.path}, #{attachment.createUsername})
+            (#{sourceId}, #{attachment.type}, #{attachment.name}, #{attachment.path}, #{attachment.createUsername})
         </foreach>
     </insert>
 
