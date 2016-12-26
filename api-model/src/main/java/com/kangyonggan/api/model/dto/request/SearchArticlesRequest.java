@@ -13,7 +13,7 @@ public class SearchArticlesRequest extends PageRequest {
     /**
      * 文章标题
      */
-    @Valid(required = false, minLength = 1, maxLength = 64)
+    @Valid(required = false, maxLength = 64)
     private String title;
 
     /**
