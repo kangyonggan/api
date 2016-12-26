@@ -18,10 +18,10 @@
 
     <insert id="insertAttachments">
         INSERT INTO attachment
-        (article_id, name, path, create_username)
+        (source_id, name, path, create_username)
         VALUES
         <foreach collection="attachments" item="attachment" separator=",">
-            (#{articleId}, #{attachment.name}, #{attachment.path}, #{attachment.createUsername})
+            (#{sourceId}, #{attachment.name}, #{attachment.path}, #{attachment.createUsername})
         </foreach>
     </insert>
 
