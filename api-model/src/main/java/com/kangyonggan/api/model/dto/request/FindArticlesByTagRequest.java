@@ -13,7 +13,7 @@ public class FindArticlesByTagRequest extends PageRequest {
     /**
      * 标签
      */
-    @Valid(required = false, minLength = 1, maxLength = 32)
+    @Valid(required = false, maxLength = 32)
     private String tag;
 
 }
