@@ -151,7 +151,8 @@ public class ApiArticleServiceImpl extends BaseService<Article> implements ApiAr
         List<Article> articles = articleMapper.selectArticlesByTag(request.getTag());
 
         log.info("根据标签查询文章结果记录数:size={}", articles.size());
-        response.setList(articles);
+        PageInfo<Article> page = new PageInfo(articles);
+        response.setPage(page);
 
         if (articles.size() == 0) {
             response.toNoResultResponse();
