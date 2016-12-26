@@ -98,6 +98,7 @@ public class ArticleServiceImpl extends BaseService<Article> implements ArticleS
             log.error("根据主键更新文章失败");
             response.toFailureResponse();
         }
+        article = super.selectByPrimaryKey(article.getId());
         response.setData(article);
 
         if (dictionaries != null && !dictionaries.isEmpty()) {
