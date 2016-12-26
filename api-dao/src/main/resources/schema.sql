@@ -69,7 +69,7 @@ CREATE UNIQUE INDEX id_UNIQUE
   ON dictionary (id);
 CREATE INDEX create_ix
   ON dictionary (created_time);
-CREATE INDEX sort_ix
+CREATE INDEX type_ix
   ON dictionary (type);
 CREATE INDEX sort_ix
   ON dictionary (sort);
