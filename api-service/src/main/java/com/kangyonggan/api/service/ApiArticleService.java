@@ -2,14 +2,17 @@ package com.kangyonggan.api.service;
 
 import com.kangyonggan.api.model.dto.reponse.AttachmentResponse;
 import com.kangyonggan.api.model.dto.reponse.CommonResponse;
-import com.kangyonggan.api.model.dto.request.*;
+import com.kangyonggan.api.model.dto.request.FindArticlesByTagRequest;
+import com.kangyonggan.api.model.dto.request.SaveArticleRequest;
+import com.kangyonggan.api.model.dto.request.SearchArticlesRequest;
+import com.kangyonggan.api.model.dto.request.UpdateArticleRequest;
 import com.kangyonggan.api.model.vo.Article;
 
 /**
  * @author kangyonggan
  * @since 2016/12/25
  */
-public interface ArticleService {
+public interface ApiArticleService {
 
     /**
      * 搜索文章, 一般是在工作台中使用
@@ -22,18 +25,18 @@ public interface ArticleService {
     /**
      * 根据主键查找文章，可以查到未删除的，一般是在工作台中用
      *
-     * @param request
+     * @param id
      * @return
      */
-    AttachmentResponse<Article> getArticle(GetArticleRequest request);
+    AttachmentResponse<Article> getArticle(Long id);
 
     /**
      * 根据主键查找文章(只能查到未删除的)
      *
-     * @param request
+     * @param id
      * @return
      */
-    AttachmentResponse<Article> findArticleById(FindArticleByIdRequest request);
+    AttachmentResponse<Article> findArticleById(Long id);
 
     /**
      * 保存文章

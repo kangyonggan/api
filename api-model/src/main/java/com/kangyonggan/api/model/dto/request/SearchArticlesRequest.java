@@ -22,10 +22,4 @@ public class SearchArticlesRequest extends PageRequest {
     @Valid(minLength = 1, maxLength = 20)
     private String createUsername;
 
-    /**
-     * 逻辑删除:{0:未删除, 1:已删除}
-     */
-    @Valid(required = false, pattern = "^[01]$", message = "是否删除的值只能是0或1")
-    private Byte isDeleted;
-
 }

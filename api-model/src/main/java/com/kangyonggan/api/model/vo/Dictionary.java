@@ -32,11 +32,6 @@ public class Dictionary implements Serializable {
     private String type;
 
     /**
-     * 父代码
-     */
-    private String pcode;
-
-    /**
      * 排序(从0开始)
      */
     private Integer sort;

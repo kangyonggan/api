@@ -20,7 +20,15 @@ public interface DictionaryMapper extends MyMapper<Dictionary> {
     /**
      * 删除文章标签
      *
-     * @param id
+     * @param articleId
      */
-    void deleteArticleDictionaries(Long id);
+    void deleteArticleDictionaries(Long articleId);
+
+    /**
+     * 根据文章ID查找文章标签
+     *
+     * @param articleId
+     * @return
+     */
+    List<Dictionary> selectDictionariesByArticleId(Long articleId);
 }

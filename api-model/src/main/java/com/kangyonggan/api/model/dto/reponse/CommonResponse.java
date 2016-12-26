@@ -88,4 +88,14 @@ public class CommonResponse<T> extends BaseObject {
         setErrCode(CommonErrors.UNKNOW_EXCEPTION.getErrCode());
         setErrMsg(CommonErrors.UNKNOW_EXCEPTION.getErrMsg());
     }
+
+    /**
+     * 转换为参数不合法
+     */
+    public void toBadArgsResponse() {
+        setState(ResponseState.F);
+        setErrCode(CommonErrors.BAD_ARGS.getErrCode());
+        setErrMsg(CommonErrors.BAD_ARGS.getErrMsg());
+    }
+
 }

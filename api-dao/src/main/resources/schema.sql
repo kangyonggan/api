@@ -55,8 +55,6 @@ CREATE TABLE dictionary
   COMMENT '值',
   type         VARCHAR(16)                           NOT NULL
   COMMENT '类型',
-  pcode        VARCHAR(32)                           NOT NULL                DEFAULT ''
-  COMMENT '父代码',
   sort         INT(11)                               NOT NULL                DEFAULT 0
   COMMENT '排序(从0开始)',
   is_deleted   TINYINT                               NOT NULL                DEFAULT 0
@@ -71,6 +69,8 @@ CREATE UNIQUE INDEX id_UNIQUE
   ON dictionary (id);
 CREATE INDEX create_ix
   ON dictionary (created_time);
+CREATE INDEX sort_ix
+  ON dictionary (type);
 CREATE INDEX sort_ix
   ON dictionary (sort);
 CREATE UNIQUE INDEX code_UNIQUE

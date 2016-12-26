@@ -9,7 +9,6 @@
         <result column="code" property="code" jdbcType="VARCHAR"/>
         <result column="value" property="value" jdbcType="VARCHAR"/>
         <result column="type" property="type" jdbcType="VARCHAR"/>
-        <result column="pcode" property="pcode" jdbcType="VARCHAR"/>
         <result column="sort" property="sort" jdbcType="INTEGER"/>
         <result column="is_deleted" property="isDeleted" jdbcType="TINYINT"/>
         <result column="created_time" property="createdTime" jdbcType="TIMESTAMP"/>
@@ -28,7 +27,17 @@
     <delete id="deleteArticleDictionaries">
         DELETE FROM article_dictionary
         <where>
-            article_id = #{id}
+            article_id = #{articleId}
         </where>
     </delete>
+
+    <select id="selectDictionariesByArticleId" resultMap="BaseResultMap">
+        SELECT d.* FROM
+        dictionary d, article_dictionary ad
+        <where>
+            d.code = ad.dictionary_code
+            AND ad.article_id = #{articleId}
+        </where>
+        ORDER BY d.type desc, d.sort asc
+    </select>
 </mapper>

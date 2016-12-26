@@ -2,6 +2,7 @@ package com.kangyonggan.api.biz.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.kangyonggan.api.biz.service.ArticleService;
 import com.kangyonggan.api.biz.service.AttachmentService;
 import com.kangyonggan.api.biz.service.DictionaryService;
 import com.kangyonggan.api.biz.service.impl.BaseService;
@@ -14,11 +15,14 @@ import com.kangyonggan.api.mapper.ArticleMapper;
 import com.kangyonggan.api.model.constants.AppConstants;
 import com.kangyonggan.api.model.dto.reponse.AttachmentResponse;
 import com.kangyonggan.api.model.dto.reponse.CommonResponse;
-import com.kangyonggan.api.model.dto.request.*;
+import com.kangyonggan.api.model.dto.request.FindArticlesByTagRequest;
+import com.kangyonggan.api.model.dto.request.SaveArticleRequest;
+import com.kangyonggan.api.model.dto.request.SearchArticlesRequest;
+import com.kangyonggan.api.model.dto.request.UpdateArticleRequest;
 import com.kangyonggan.api.model.vo.Article;
 import com.kangyonggan.api.model.vo.Attachment;
 import com.kangyonggan.api.model.vo.Dictionary;
-import com.kangyonggan.api.service.ArticleService;
+import com.kangyonggan.api.service.ApiArticleService;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -32,9 +36,9 @@ import java.util.List;
  * @author kangyonggan
  * @since 2016/12/25
  */
-@Service("articleService")
+@Service("apiArticleService")
 @Log4j2
-public class ArticleServiceImpl extends BaseService<Article> implements ArticleService {
+public class ApiArticleServiceImpl extends BaseService<Article> implements ApiArticleService {
 
     @Autowired
     private ArticleMapper articleMapper;
@@ -45,6 +49,9 @@ public class ArticleServiceImpl extends BaseService<Article> implements ArticleS
     @Autowired
     private DictionaryService dictionaryService;
 
+    @Autowired
+    private ArticleService articleService;
+
     @Override
     public CommonResponse<Article> searchArticles(SearchArticlesRequest request) {
         CommonResponse<Article> response = CommonResponse.getSuccessResponse();
@@ -53,9 +60,6 @@ public class ArticleServiceImpl extends BaseService<Article> implements ArticleS
         Example.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotEmpty(request.getTitle())) {
             criteria.andLike("title", StringUtil.toLikeString(request.getTitle()));
-        }
-        if (request.getIsDeleted() != null) {
-            criteria.andEqualTo("isDeleted", request.getIsDeleted());
         }
         criteria.andEqualTo("createUsername", request.getCreateUsername());
 
@@ -72,11 +76,11 @@ public class ArticleServiceImpl extends BaseService<Article> implements ArticleS
     }
 
     @Override
-    @CacheGetOrSave("article:id:{0:id}")
-    public AttachmentResponse<Article> getArticle(GetArticleRequest request) {
+    @CacheGetOrSave("article:id:{0}")
+    public AttachmentResponse<Article> getArticle(Long id) {
         AttachmentResponse<Article> response = AttachmentResponse.getSuccessResponse();
 
-        Article article = super.selectByPrimaryKey(request.getId());
+        Article article = super.selectByPrimaryKey(id);
         response.setData(article);
 
         if (article == null) {
@@ -90,12 +94,12 @@ public class ArticleServiceImpl extends BaseService<Article> implements ArticleS
     }
 
     @Override
-    @CacheGetOrSave("article:id:{0:id}")
-    public AttachmentResponse<Article> findArticleById(FindArticleByIdRequest request) {
+    @CacheGetOrSave("article:id:{0}")
+    public AttachmentResponse<Article> findArticleById(Long id) {
         AttachmentResponse<Article> response = AttachmentResponse.getSuccessResponse();
 
         Article article = new Article();
-        article.setId(request.getId());
+        article.setId(id);
         article.setIsDeleted(AppConstants.IS_DELETED_NO);
 
         article = super.selectOne(article);
@@ -116,84 +120,18 @@ public class ArticleServiceImpl extends BaseService<Article> implements ArticleS
     public CommonResponse<Article> saveArticleWithAttachments(SaveArticleRequest request) {
         CommonResponse<Article> response = CommonResponse.getSuccessResponse();
 
-        List<Dictionary> dictionaries = dictionaryService.findDictionariesByCodes(request.getTags());
-        request.setTags(Collections3.convertToString(Collections3.extractToList(dictionaries, "value"), " "));
-
-        Article article = new Article();
-        try {
-            PropertyUtils.copyProperties(article, request);
-        } catch (Exception e) {
-            log.error("保存文章时， 属性拷贝异常");
-            response.toUnknowExceptionResponse();
-            return response;
-        }
-
-        log.info("copy request to article, article is:{}", article);
-        int row = super.insertSelective(article);
-        log.info("保存文章影响行数:row={}", row);
-        if (row == 0) {
-            log.error("保存文章失败，我也不知道为什么");
-            response.toFailureResponse();
-        }
-        response.setData(article);
-
-        dictionaryService.saveArticleDictionaries(article.getId(), dictionaries);
-
-        // 保存附件
-        if (request.getAttachments() != null && !request.getAttachments().isEmpty()) {
-            attachmentService.saveAttachments(article.getId(), request.getAttachments());
-        }
+        articleService.saveArticleWithAttachments(request, response);
 
         return response;
     }
 
     @Override
-    @CacheDelete("article:id:{0:id}")
+    @CacheDelete("article:id:{0:id}||dictionary:article:{0:id}")
     @CacheDeleteAll("article:tag")
     public CommonResponse<Article> updateArticleWithAttachments(UpdateArticleRequest request) {
         CommonResponse<Article> response = CommonResponse.getSuccessResponse();
 
-        List<Dictionary> dictionaries = null;
-        if (StringUtils.isNotEmpty(request.getTags())) {
-            dictionaries = dictionaryService.findDictionariesByCodes(request.getTags());
-            request.setTags(Collections3.convertToString(Collections3.extractToList(dictionaries, "value"), " "));
-        }
-
-        Article article = new Article();
-        try {
-            PropertyUtils.copyProperties(article, request);
-        } catch (Exception e) {
-            log.error("根据主键更新文章时， 属性拷贝异常");
-            response.toUnknowExceptionResponse();
-            return response;
-        }
-        log.info("copy request to article, article is:{}", article);
-
-        Example example = new Example(Article.class);
-        example.createCriteria().andEqualTo("id", request.getId());
-
-        int row = articleMapper.updateByExampleSelective(article, example);
-        log.info("根据主键更新文章影响行数:row={}", row);
-
-        if (row == 0) {
-            log.error("根据主键更新文章失败");
-            response.toFailureResponse();
-        }
-        response.setData(article);
-
-        if (dictionaries != null && !dictionaries.isEmpty()) {
-
-            // 删除原本的标签
-            dictionaryService.deleteArticleDictionaries(article.getId());
-
-            dictionaryService.saveArticleDictionaries(article.getId(), dictionaries);
-        }
-
-        // 保存附件
-        if (request.getAttachments() != null && !request.getAttachments().isEmpty()) {
-            attachmentService.saveAttachments(article.getId(), request.getAttachments());
-        }
-
+        articleService.updateArticleWithAttachments(request, response);
 
         return response;
     }

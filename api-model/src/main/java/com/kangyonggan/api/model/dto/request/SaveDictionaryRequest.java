@@ -30,12 +30,6 @@ public class SaveDictionaryRequest extends BaseObject {
     private String type;
 
     /**
-     * 父代码
-     */
-    @Valid(required = false, minLength = 1, maxLength = 32)
-    private String pcode;
-
-    /**
      * 排序(从0开始)
      */
     @Valid(required = false, min = 0, max = Integer.MAX_VALUE)

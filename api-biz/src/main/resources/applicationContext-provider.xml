@@ -20,12 +20,13 @@
     <dubbo:monitor protocol="registry"/>
 
     <!-- dubbo对外开放接口 -->
-    <dubbo:service interface="com.kangyonggan.api.service.DictionaryService"
-                   ref="dictionaryService" version="${api.dubbo.api.version}" retries="0"
+    <dubbo:service interface="com.kangyonggan.api.service.ApiDictionaryService"
+                   ref="apiDictionaryService" version="${api.dubbo.api.version}" retries="0"
                    timeout="${api.dubbo.timeout}"/>
 
     <!-- dubbo对外开放接口 -->
-    <dubbo:service interface="com.kangyonggan.api.service.ArticleService"
-                   ref="articleService" version="${api.dubbo.api.version}" retries="0" timeout="${api.dubbo.timeout}"/>
+    <dubbo:service interface="com.kangyonggan.api.service.ApiArticleService"
+                   ref="apiArticleService" version="${api.dubbo.api.version}" retries="0"
+                   timeout="${api.dubbo.timeout}"/>
 
 </beans>
