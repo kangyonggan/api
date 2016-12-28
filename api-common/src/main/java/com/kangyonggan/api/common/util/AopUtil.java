@@ -19,7 +19,7 @@ public class AopUtil {
                 req = req + "null,";
                 continue;
             } else if (arg instanceof List == true) {
-                req = req + JSON.toJSONString((List) arg);
+                req = req + JSON.toJSONString(arg);
             } else if (arg.getClass().isArray()) {
                 req = req + JSONArray.toJSONString(arg);
             } else if (arg instanceof Enum) {
@@ -48,7 +48,7 @@ public class AopUtil {
             rsp = rsp + "null,";
             return rsp;
         } else if (arg instanceof List) {
-            rsp = rsp + JSON.toJSONString((List) arg);
+            rsp = rsp + JSON.toJSONString(arg);
             return rsp;
         } else if (arg instanceof Enum) {
             rsp = rsp + JSON.toJSONString(arg);
