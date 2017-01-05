@@ -71,7 +71,7 @@ public class ApiArticleServiceImpl extends BaseService<Article> implements ApiAr
     }
 
     @Override
-    @CacheGetOrSave("article:id:{0}")
+//    @CacheGetOrSave("article:id:{0}") // 会有bug
     public AttachmentResponse<Article> getArticle(Long id) {
         AttachmentResponse<Article> response = AttachmentResponse.getSuccessResponse();
 
