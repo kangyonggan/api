@@ -30,11 +30,15 @@
                 <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
             </Filters>
         </RollingRandomAccessFile>
+        <SMTP name="Mail" subject="${api.app.name} - 报警通知" to="${api.mail.receiver}" from="${api.mail.username}"
+              smtpHost="${api.mail.host}" smtpUsername="${api.mail.username}" smtpPassword="${api.mail.password}" bufferSize="${api.mail.bufferSize}" >
+        </SMTP>
         <Async name="AsyncAll">
             <AppenderRef ref="AllFile"/>
         </Async>
         <Async name="AsyncError">
             <AppenderRef ref="ErrorFile"/>
+            <AppenderRef ref="Mail" />
         </Async>
     </Appenders>
     <Loggers>

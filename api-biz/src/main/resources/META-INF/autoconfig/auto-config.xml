@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
     <group>
+        <!--app-->
+        <property name="api.app.name" description="项目名字" defaultValue="核心系统"/>
+
         <!-- dubbo -->
         <property name="api.dubbo.name" description="项目名字" defaultValue="api"/>
         <property name="api.dubbo.registry.address" description="dubbo注册地址"
@@ -17,6 +20,14 @@
         <property name="api.redis.host" description="redis主机ip" defaultValue="127.0.0.1"/>
         <property name="api.redis.port" description="redis主机端口" defaultValue="6379"/>
         <property name="api.redis.password" description="redis密码" defaultValue="123456"/>
+
+        <!--mail-->
+        <property name="api.mail.host" description="邮件服务器地址" defaultValue="smtp.163.com"/>
+        <property name="api.mail.username" description="邮件服务器用户名" defaultValue="kangyg2017@163.com"/>
+        <property name="api.mail.password" description="邮件服务器密码" defaultValue="123456"/>
+        <property name="api.mail.timeout" description="邮件发送超时时间" defaultValue="25000"/>
+        <property name="api.mail.receiver" description="错误日志邮件接收人" defaultValue="kangyonggan@gmail.com"/>
+        <property name="api.mail.bufferSize" description="错误日志邮件缓冲区大小(单位:k)" defaultValue="50"/>
 
         <!--jdbc-->
         <property name="api.jdbc.driver" description="jdbc驱动" defaultValue="com.mysql.jdbc.Driver"/>
