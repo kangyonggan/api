@@ -4,7 +4,6 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.kangyonggan.api.biz.service.ArticleService;
 import com.kangyonggan.api.biz.service.AttachmentService;
-import com.kangyonggan.api.biz.service.DictionaryService;
 import com.kangyonggan.api.biz.service.impl.BaseService;
 import com.kangyonggan.api.common.annotation.CacheDelete;
 import com.kangyonggan.api.common.annotation.CacheDeleteAll;
@@ -40,9 +39,6 @@ public class ApiArticleServiceImpl extends BaseService<Article> implements ApiAr
 
     @Autowired
     private AttachmentService attachmentService;
-
-    @Autowired
-    private DictionaryService dictionaryService;
 
     @Autowired
     private ArticleService articleService;
@@ -159,5 +155,13 @@ public class ApiArticleServiceImpl extends BaseService<Article> implements ApiAr
         }
 
         return response;
+    }
+
+    @Override
+    @CacheDelete("article:id:{0:id}")
+    public CommonResponse<Article> deleteArticleAttachment(Long articleId, Long attachmentId) {
+        attachmentService.deleteAttachment(articleId, attachmentId, AttachmentType.ARTICLE.getType());
+
+        return CommonResponse.getSuccessResponse();
     }
 }

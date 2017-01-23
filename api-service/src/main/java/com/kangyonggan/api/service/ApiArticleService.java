@@ -67,4 +67,12 @@ public interface ApiArticleService {
      */
     CommonResponse<Article> findArticlesByTag(FindArticlesByTagRequest request);
 
+    /**
+     * 删除附件
+     *
+     * @param articleId
+     * @param attachmentId
+     * @return
+     */
+    CommonResponse<Article> deleteArticleAttachment(Long articleId, Long attachmentId);
 }

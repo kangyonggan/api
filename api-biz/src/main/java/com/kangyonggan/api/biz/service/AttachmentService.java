@@ -1,7 +1,6 @@
 package com.kangyonggan.api.biz.service;
 
 
-
 import com.kangyonggan.api.model.vo.Attachment;
 
 import java.util.List;
@@ -28,4 +27,13 @@ public interface AttachmentService {
      * @return
      */
     List<Attachment> findAttachmentsBySourceIdAndType(Long sourceId, String type);
+
+    /**
+     * 删除附件
+     *
+     * @param articleId
+     * @param attachmentId
+     * @param type
+     */
+    void deleteAttachment(Long articleId, Long attachmentId, String type);
 }

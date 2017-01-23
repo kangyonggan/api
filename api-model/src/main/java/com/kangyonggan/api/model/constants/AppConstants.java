@@ -12,5 +12,6 @@ public interface AppConstants {
      * 未删除
      */
     byte IS_DELETED_NO = 0;
+    byte IS_DELETED_YES = 1;
 
 }

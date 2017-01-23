@@ -6,6 +6,7 @@ import com.kangyonggan.api.model.constants.AppConstants;
 import com.kangyonggan.api.model.vo.Attachment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
 
@@ -32,5 +33,16 @@ public class AttachmentServiceImpl extends BaseService<Attachment> implements At
         attachment.setType(type);
 
         return super.select(attachment);
+    }
+
+    @Override
+    public void deleteAttachment(Long articleId, Long attachmentId, String type) {
+        Attachment attachment = new Attachment();
+        attachment.setIsDeleted(AppConstants.IS_DELETED_YES);
+
+        Example example = new Example(Attachment.class);
+        example.createCriteria().andEqualTo("id", attachmentId).andEqualTo("sourceId", articleId).andEqualTo("type", type);
+
+        attachmentMapper.updateByExampleSelective(attachment, example);
     }
 }
