@@ -75,4 +75,11 @@ public interface ApiArticleService {
      * @return
      */
     CommonResponse<Article> deleteArticleAttachment(Long articleId, Long attachmentId);
+
+    /**
+     * 查找所有文章，一般用于rss订阅
+     *
+     * @return
+     */
+    CommonResponse<Article> findAllArticles();
 }

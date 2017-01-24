@@ -6,6 +6,8 @@ import com.kangyonggan.api.model.dto.request.UpdateArticleRequest;
 import com.kangyonggan.api.model.dto.request.UpdateArticleWithAttachmentsRequest;
 import com.kangyonggan.api.model.vo.Article;
 
+import java.util.List;
+
 /**
  * @author kangyonggan
  * @since 2016/12/26
@@ -35,4 +37,12 @@ public interface ArticleService {
      * @param response
      */
     void updateArticle(UpdateArticleRequest request, CommonResponse<Article> response);
+
+    /**
+     * 查找所有文章
+     *
+     * @return
+     */
+    List<Article> findAllArticles();
+
 }

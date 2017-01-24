@@ -6,6 +6,7 @@ import com.kangyonggan.api.biz.service.DictionaryService;
 import com.kangyonggan.api.common.annotation.LogTime;
 import com.kangyonggan.api.common.util.Collections3;
 import com.kangyonggan.api.mapper.ArticleMapper;
+import com.kangyonggan.api.model.constants.AppConstants;
 import com.kangyonggan.api.model.dto.reponse.CommonResponse;
 import com.kangyonggan.api.model.dto.request.SaveArticleRequest;
 import com.kangyonggan.api.model.dto.request.UpdateArticleRequest;
@@ -156,5 +157,13 @@ public class ArticleServiceImpl extends BaseService<Article> implements ArticleS
 
             dictionaryService.saveArticleDictionaries(article.getId(), dictionaries);
         }
+    }
+
+    @Override
+    @LogTime
+    public List<Article> findAllArticles() {
+        Article article = new Article();
+        article.setIsDeleted(AppConstants.IS_DELETED_NO);
+        return super.select(article);
     }
 }

@@ -164,4 +164,11 @@ public class ApiArticleServiceImpl extends BaseService<Article> implements ApiAr
 
         return CommonResponse.getSuccessResponse();
     }
+
+    @Override
+    public CommonResponse<Article> findAllArticles() {
+        CommonResponse<Article> response = CommonResponse.getSuccessResponse();
+        response.setList(articleService.findAllArticles());
+        return response;
+    }
 }
