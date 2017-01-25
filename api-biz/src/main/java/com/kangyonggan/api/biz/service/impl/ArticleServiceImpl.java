@@ -162,8 +162,10 @@ public class ArticleServiceImpl extends BaseService<Article> implements ArticleS
     @Override
     @LogTime
     public List<Article> findAllArticles() {
-        Article article = new Article();
-        article.setIsDeleted(AppConstants.IS_DELETED_NO);
-        return super.select(article);
+        Example example = new Example(Article.class);
+        example.createCriteria().andEqualTo("isDeleted", AppConstants.IS_DELETED_NO);
+
+        example.setOrderByClause("id desc");
+        return super.selectByExample(example);
     }
 }
